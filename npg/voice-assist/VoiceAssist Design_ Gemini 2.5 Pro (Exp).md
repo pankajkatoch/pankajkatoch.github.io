@@ -40,31 +40,36 @@ A client-server architecture is proposed:
 
 Code snippet
 
-graph LR  
-    A\[User Interface (Android App)\] \-- Slurred Speech \--\> B(Audio Capture/Preprocessing);  
-    B \-- Processed Audio \--\> C{Backend API Gateway};  
-    C \-- Request \--\> D\[AI/ML Service (Speech Transformation & Cloning)\];  
-    D \-- Synthesized Audio \--\> C;  
-    C \-- Synthesized Audio \--\> A;  
-    A \-- Playback \--\> E\[User/Listener\];
+```mermaid
+graph TD
+    A["User Interface (Android App)"]
+    B["Audio Capture/Preprocessing"]
+    C{"Backend API Gateway"}
+    D["AI/ML Service (Speech Transformation & Cloning)"]
+    E["User/Listener"]
+    F["User Profile & Model Storage"]
+    G["Calling Service (Signaling/Streaming)"]
+    H["Continuous Learning Pipeline"]
 
-    subgraph Backend Cloud Services  
-        C;  
-        D;  
-        F\[User Profile & Model Storage\];  
-        G\[Calling Service (Signaling/Streaming)\];  
-        H\[Continuous Learning Pipeline\];  
+    A -- Slurred Speech --> B;
+    B -- Processed Audio --> C;
+    C -- Synthesized Audio --> A;
+    A -- Playback --> E;
+    A -- Call Actions --> G;
+    B -- "Training Data (Consent)" --> H;
+
+    subgraph Backend Cloud Services
+        direction TB
+        C; D; F; G; H;
+
+        C -- Request --> D;
+        D -- Synthesized Audio --> C;
+        G -- Audio Stream --> C;
+        H -- Model Updates --> F;
+        F -- Personalized Models --> D;
+        F -- "User Data" --> D;
     end
-
-    A \-- Call Actions \--\> G;  
-    G \-- Audio Stream \--\> C;  
-    C \-- Audio Stream \--\> A;
-
-    B \-- Training Data (Consent) \--\> H;  
-    F \<-- Model Updates \--- H;  
-    D \<-- Personalized Models \--- F;  
-    D \--- User Data \---\> F;
-
+```
 **4\. Technology Stack Choices**
 
 | Component | Technology Choice | Rationale & Alternatives Considered |
